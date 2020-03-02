@@ -72,5 +72,7 @@ dependencies {
     testImplementation "androidx.test.ext:junit-ktx:$androidXTestExtKotlinRunnerVersion"
    // InstantTaskExecutor
     testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
+    //coroutines Test
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
 
 }
