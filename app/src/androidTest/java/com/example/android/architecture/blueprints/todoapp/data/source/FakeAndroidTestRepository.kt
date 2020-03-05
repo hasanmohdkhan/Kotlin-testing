@@ -10,7 +10,7 @@ import com.example.android.architecture.blueprints.todoapp.data.Task
 import kotlinx.coroutines.runBlocking
 import java.util.*
 
-class FakeTestRepository: TasksRepository {
+class FakeAndroidTestRepository: TasksRepository {
     var tasksServiceData: LinkedHashMap<String, Task> = LinkedHashMap()
 
     private var shouldReturnError = false
@@ -39,10 +39,10 @@ class FakeTestRepository: TasksRepository {
         return observableTasks.map { tasks ->
             when (tasks) {
                 is Result.Loading -> Result.Loading
-                is Result.Error -> Result.Error(tasks.exception)
+                is Error -> Error(tasks.exception)
                 is Result.Success -> {
                     val task = tasks.data.firstOrNull() { it.id == taskId }
-                            ?: return@map Result.Error(Exception("Not found"))
+                            ?: return@map Error(Exception("Not found"))
                     Result.Success(task)
                 }
             }
@@ -51,19 +51,19 @@ class FakeTestRepository: TasksRepository {
 
     override suspend fun getTask(taskId: String, forceUpdate: Boolean): Result<Task> {
         if (shouldReturnError) {
-            return Result.Error(Exception("Test exception"))
+            return Error(Exception("Test exception"))
         }
         tasksServiceData[taskId]?.let {
-            return Result.Success(it)
+            return Success(it)
         }
-        return Result.Error(Exception("Could not find task"))
+        return Error(Exception("Could not find task"))
     }
 
     override suspend fun getTasks(forceUpdate: Boolean): Result<List<Task>> {
         if (shouldReturnError) {
-            return Result.Error(Exception("Test exception"))
+            return Error(Exception("Test exception"))
         }
-        return Result.Success(tasksServiceData.values.toList())
+        return Success(tasksServiceData.values.toList())
     }
 
     override suspend fun saveTask(task: Task) {
